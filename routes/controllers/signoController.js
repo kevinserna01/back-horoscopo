@@ -135,36 +135,40 @@ const getHoroscopoByPersona = async (req, res) => {
         res.status(500).json({ message: 'Error en el servidor', error });
     }
 };
-
 const addUser = async (req, res) => {
     const { username, password, role } = req.body;
 
     if (!['admin', 'user'].includes(role)) {
+        console.log('Rol no válido:', role);
         return res.status(400).json({ error: 'Rol no válido' });
     }
 
     const filePath = path.join(__dirname, `../../db/${role}.json`);
+    console.log('File path:', filePath); // Log para verificar la ruta
 
     try {
         const data = await fs.readFile(filePath, 'utf-8');
-        const usersData = JSON.parse(data);
+        console.log('Datos leídos:', data); // Log para verificar si el archivo se lee correctamente
 
+        const usersData = JSON.parse(data);
         const userExists = usersData[`${role}s`].some(user => user.username === username);
         if (userExists) {
+            console.log('El usuario ya existe:', username);
             return res.status(400).json({ error: 'El usuario ya existe' });
         }
 
         const newUser = { username, password };
-
         usersData[`${role}s`].push(newUser);
 
         await fs.writeFile(filePath, JSON.stringify(usersData, null, 2), { encoding: 'utf-8' });
+        console.log('Nuevo usuario agregado:', newUser);
 
         return res.status(201).json({ message: `Nuevo ${role} agregado con éxito.` });
     } catch (error) {
         console.error('Error al agregar el nuevo usuario:', error);
         return res.status(500).json({ error: 'Error en el servidor' });
     }
+
 };
 
 module.exports = {
