@@ -9,12 +9,18 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(cors());
 
-// Ruta para la raíz que responde con un mensaje
+// Manejador para la ruta raíz
 app.get('/', (req, res) => {
-    res.send("Hola soy el horóscopo de Kevin");
+    res.send('Bienvenido al backend de Kevin!'); // O cualquier otro mensaje que prefieras
 });
 
-// Usar el router para la ruta /v1/signos
+// Manejador para la ruta GET que imprime el mensaje
+app.get('/v1/signos', (req, res, next) => {
+    console.log('Estás en el backend de Kevin');
+    next(); // Llama al siguiente middleware o controlador de la ruta
+});
+
+// Usar el router para otras rutas
 app.use('/v1/signos', router);
 
 app.listen(4000, () => {
