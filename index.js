@@ -2,8 +2,13 @@ const express = require('express');
 const { urlencoded, json } = require('express');
 const router = require('./routes/signos.routes.js');
 const cors = require('cors');
+const favicon = require('serve-favicon');
+const path = require('path');
 
 const app = express();
+
+// Middleware para servir favicon
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(urlencoded({ extended: true }));
 app.use(json());
